@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 const port = 3000;
-const mongo = new MongoDriver("mongodb+srv://testUser:123@cluster0.vumv6ea.mongodb.net/?retryWrites=true&w=majority");
+const mongo = new MongoDriver("mongodb+srv://embarrassedboy233:123@cluster0.4q4ed6h.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
 let mongoStarted = false
 
 //home page
@@ -234,7 +234,7 @@ async function checkIfReserved(){
     let reservedList = await mongo.read("reservations");
     let now = new Date();
     for(let i = 0; i < reservedList.length; i++){
-        if (reservedList[i].timestamp - now <= 3600000){
+        if (reservedList[i].timestamp - now <= 60){
             for (let j = 0; j < reservedList[i].pcList.length; j++){
                 pcQuery = {name: reservedList[i].pcList[j]};
                 pcUpdate = {status: "Reserved"};
@@ -244,7 +244,9 @@ async function checkIfReserved(){
         }
     }
 }
-setInterval(checkIfReserved, 90000);
+if(mongoStarted){
+    setInterval(checkIfReserved, 90000);
+}
 
 
 //return true if pc is open
